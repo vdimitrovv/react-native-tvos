@@ -894,6 +894,47 @@ public class ReactTextInputManager extends BaseViewManager<ReactEditText, Layout
               eventDispatcher.dispatchEvent(
                   new ReactTextInputEndEditingEvent(
                       editText.getId(), editText.getText().toString()));
+
+              switch (actionId) {
+                case EditorInfo.IME_ACTION_PREVIOUS: {
+                  @SuppressLint("WrongConstant") View view = editText.focusSearch(View.FOCUS_BACKWARD);
+
+//                      if (view instanceof ReactEditText) {
+//                        view.requestFocus();
+//                        ((ReactEditText) view).showKeyboard();
+//                      } else {
+//                        if (view != null) {
+//                          view.requestFocus();
+//                        }
+                  editText.hideKeyboard();
+//                      }
+                }
+                break;
+                case EditorInfo.IME_ACTION_NEXT:
+                case EditorInfo.IME_ACTION_DONE: {
+                  @SuppressLint("WrongConstant") View view = editText.focusSearch(View.FOCUS_FORWARD);
+                  if (view instanceof ReactEditText && editText.getId() != view.getId()) {
+                    view.requestFocus();
+                    ((ReactEditText) view).showKeyboard();
+                  } else {
+                    if (view != null) {
+                      view.requestFocus();
+                    }
+
+                    // manually triggering onFocusChanged when having only one input field on
+                    // the screen and no other focusable elements
+                    if (editText.getId() == view.getId()) {
+                      editText.onFocusChanged(false, View.FOCUSABLES_ALL, null);
+                    }
+                    editText.hideKeyboard();
+                  }
+                }
+                break;
+                default:
+                  if (blurOnSubmit) {
+                    editText.clearFocus();
+                  }
+                  break;
             }
           }
         });

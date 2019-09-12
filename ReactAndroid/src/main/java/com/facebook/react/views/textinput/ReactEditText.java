@@ -88,6 +88,8 @@ public class ReactEditText extends EditText {
 
   private static final KeyListener sKeyListener = QwertyKeyListener.getInstanceForFullKeyboard();
 
+  private boolean isKeyboardOpened;
+
   public ReactEditText(Context context) {
     super(context);
     setFocusableInTouchMode(false);
@@ -137,6 +139,11 @@ public class ReactEditText extends EditText {
         });
   }
 
+  private boolean isTVDevice() {
+    UiModeManager uiModeManager = (UiModeManager) getContext().getSystemService(Context.UI_MODE_SERVICE);
+    return uiModeManager.getCurrentModeType() == Configuration.UI_MODE_TYPE_TELEVISION;
+  }
+
   // After the text changes inside an EditText, TextView checks if a layout() has been requested.
   // If it has, it will not scroll the text to the end of the new text inserted, but wait for the
   // next layout() to be called. However, we do not perform a layout() after a requestLayout(), so
@@ -161,6 +168,7 @@ public class ReactEditText extends EditText {
         // Disallow parent views to intercept touch events, until we can detect if we should be
         // capturing these touches or not.
         this.getParent().requestDisallowInterceptTouchEvent(true);
+        isKeyboardOpened = !isKeyboardOpened;
         break;
       case MotionEvent.ACTION_MOVE:
         if (mDetectScrollMovement) {
@@ -185,6 +193,9 @@ public class ReactEditText extends EditText {
     if (keyCode == KeyEvent.KEYCODE_ENTER && !isMultiline()) {
       hideSoftKeyboard();
       return true;
+    }
+    if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_BACK) {
+      isKeyboardOpened = !isKeyboardOpened;
     }
     return super.onKeyUp(keyCode, event);
   }
@@ -218,6 +229,7 @@ public class ReactEditText extends EditText {
   public void clearFocus() {
     setFocusableInTouchMode(false);
     super.clearFocus();
+    isKeyboardOpened = false;
     hideSoftKeyboard();
   }
 
@@ -228,6 +240,20 @@ public class ReactEditText extends EditText {
     if (isFocused()) {
       return true;
     }
+
+//    if (!mIsJSSettingFocus && !isTVDevice()) {
+//      return false;
+//    }
+//
+//    if (!isTVDevice()) {
+//      showSoftKeyboard();
+//    } else {
+//      if (isKeyboardOpened) {
+//        showSoftKeyboard();
+//      } else {
+//        hideSoftKeyboard();
+//      }
+//    }
 
     if (!mShouldAllowFocus) {
       return false;
@@ -298,6 +324,10 @@ public class ReactEditText extends EditText {
     super.onFocusChanged(focused, direction, previouslyFocusedRect);
     if (focused && mSelectionWatcher != null) {
       mSelectionWatcher.onSelectionChanged(getSelectionStart(), getSelectionEnd());
+    }
+
+    if (!focused) {
+      isKeyboardOpened = false;
     }
   }
 
@@ -482,6 +512,16 @@ public class ReactEditText extends EditText {
       }
     }
     return true;
+  }
+
+  public void showKeyboard() {
+    isKeyboardOpened = true;
+    showSoftKeyboard();
+  }
+
+  public void hideKeyboard() {
+    isKeyboardOpened = false;
+    hideSoftKeyboard();
   }
 
   protected boolean showSoftKeyboard() {

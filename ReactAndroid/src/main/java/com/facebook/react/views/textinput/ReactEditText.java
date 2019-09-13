@@ -6,7 +6,9 @@
  */
 package com.facebook.react.views.textinput;
 
+import android.app.UiModeManager;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -241,28 +243,23 @@ public class ReactEditText extends EditText {
       return true;
     }
 
-//    if (!mIsJSSettingFocus && !isTVDevice()) {
-//      return false;
-//    }
-//
-//    if (!isTVDevice()) {
-//      showSoftKeyboard();
-//    } else {
-//      if (isKeyboardOpened) {
-//        showSoftKeyboard();
-//      } else {
-//        hideSoftKeyboard();
-//      }
-//    }
-
-    if (!mShouldAllowFocus) {
+    if (!mShouldAllowFocus && !isTVDevice()) {
       return false;
     }
 
     setFocusableInTouchMode(true);
     boolean focused = super.requestFocus(direction, previouslyFocusedRect);
-    if (getShowSoftInputOnFocus()) {
-      showSoftKeyboard();
+
+    if (!isTVDevice()) {
+      if (getShowSoftInputOnFocus()) {
+        showSoftKeyboard();
+      }
+    } else {
+      if (isKeyboardOpened) {
+        showSoftKeyboard();
+      } else {
+        hideSoftKeyboard();
+      }
     }
     return focused;
   }

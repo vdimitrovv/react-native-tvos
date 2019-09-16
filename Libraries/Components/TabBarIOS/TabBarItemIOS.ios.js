@@ -10,11 +10,11 @@
 
 'use strict';
 
-const React = require('React');
-const StaticContainer = require('StaticContainer.react');
-const StyleSheet = require('StyleSheet');
-const View = require('View');
-const RCTTabBarItemNativeComponent = require('RCTTabBarItemNativeComponent');
+const React = require('react');
+const StyleSheet = require('../../StyleSheet/StyleSheet');
+const View = require('../View/View');
+const StaticContainer = require('../StaticContainer.react');
+const RCTTabBarItemNativeComponent = require('./RCTTabBarItemNativeComponent');
 
 import type {ViewProps} from 'ViewPropTypes';
 import type {ColorValue} from 'StyleSheetTypes';

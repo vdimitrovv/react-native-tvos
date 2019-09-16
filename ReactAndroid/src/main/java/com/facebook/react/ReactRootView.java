@@ -54,6 +54,9 @@ import com.facebook.react.uimanager.common.UIManagerType;
 import com.facebook.react.uimanager.events.EventDispatcher;
 import com.facebook.systrace.Systrace;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Default root view for catalyst apps. Provides the ability to listen for size changes so that a UI
  * manager can re-layout its elements. It delegates handling touch events for itself and child views

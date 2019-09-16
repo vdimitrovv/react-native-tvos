@@ -6,6 +6,7 @@
  */
 package com.facebook.react.views.textinput;
 
+import android.annotation.SuppressLint;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -885,15 +886,51 @@ public class ReactTextInputManager extends BaseViewManager<ReactEditText, Layout
         new View.OnFocusChangeListener() {
           public void onFocusChange(View v, boolean hasFocus) {
             EventDispatcher eventDispatcher =
-                reactContext.getNativeModule(UIManagerModule.class).getEventDispatcher();
+                    reactContext.getNativeModule(UIManagerModule.class).getEventDispatcher();
             if (hasFocus) {
               eventDispatcher.dispatchEvent(new ReactTextInputFocusEvent(editText.getId()));
             } else {
               eventDispatcher.dispatchEvent(new ReactTextInputBlurEvent(editText.getId()));
 
               eventDispatcher.dispatchEvent(
-                  new ReactTextInputEndEditingEvent(
+                      new ReactTextInputEndEditingEvent(
+                              editText.getId(), editText.getText().toString()));
+            }
+          }
+        });
+
+    editText.setOnEditorActionListener(
+        new TextView.OnEditorActionListener() {
+          @Override
+          public boolean onEditorAction(TextView v, int actionId, KeyEvent keyEvent) {
+            if ((actionId & EditorInfo.IME_MASK_ACTION) != 0 || actionId == EditorInfo.IME_NULL) {
+              boolean blurOnSubmit = editText.getBlurOnSubmit();
+              boolean isMultiline = editText.isMultiline();
+
+              // Motivation:
+              // * blurOnSubmit && isMultiline => Clear focus; prevent default behaviour (return
+              // true);
+              // * blurOnSubmit && !isMultiline => Clear focus; prevent default behaviour (return
+              // true);
+              // * !blurOnSubmit && isMultiline => Perform default behaviour (return false);
+              // * !blurOnSubmit && !isMultiline => Prevent default behaviour (return true).
+              // Additionally we always generate a `submit` event.
+
+              EventDispatcher eventDispatcher =
+                  reactContext.getNativeModule(UIManagerModule.class).getEventDispatcher();
+
+              eventDispatcher.dispatchEvent(
+                  new ReactTextInputSubmitEditingEvent(
                       editText.getId(), editText.getText().toString()));
+
+              if (blurOnSubmit) {
+                editText.clearFocus();
+              }
+
+              // Prevent default behavior except when we want it to insert a newline.
+              if (blurOnSubmit || !isMultiline) {
+                return true;
+              }
 
               switch (actionId) {
                 case EditorInfo.IME_ACTION_PREVIOUS: {
@@ -935,41 +972,6 @@ public class ReactTextInputManager extends BaseViewManager<ReactEditText, Layout
                     editText.clearFocus();
                   }
                   break;
-            }
-          }
-        });
-
-    editText.setOnEditorActionListener(
-        new TextView.OnEditorActionListener() {
-          @Override
-          public boolean onEditorAction(TextView v, int actionId, KeyEvent keyEvent) {
-            if ((actionId & EditorInfo.IME_MASK_ACTION) != 0 || actionId == EditorInfo.IME_NULL) {
-              boolean blurOnSubmit = editText.getBlurOnSubmit();
-              boolean isMultiline = editText.isMultiline();
-
-              // Motivation:
-              // * blurOnSubmit && isMultiline => Clear focus; prevent default behaviour (return
-              // true);
-              // * blurOnSubmit && !isMultiline => Clear focus; prevent default behaviour (return
-              // true);
-              // * !blurOnSubmit && isMultiline => Perform default behaviour (return false);
-              // * !blurOnSubmit && !isMultiline => Prevent default behaviour (return true).
-              // Additionally we always generate a `submit` event.
-
-              EventDispatcher eventDispatcher =
-                  reactContext.getNativeModule(UIManagerModule.class).getEventDispatcher();
-
-              eventDispatcher.dispatchEvent(
-                  new ReactTextInputSubmitEditingEvent(
-                      editText.getId(), editText.getText().toString()));
-
-              if (blurOnSubmit) {
-                editText.clearFocus();
-              }
-
-              // Prevent default behavior except when we want it to insert a newline.
-              if (blurOnSubmit || !isMultiline) {
-                return true;
               }
 
               // If we've reached this point, it means that the TextInput has 'blurOnSubmit' set to

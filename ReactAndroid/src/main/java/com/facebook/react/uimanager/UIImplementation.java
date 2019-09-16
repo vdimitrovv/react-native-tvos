@@ -6,6 +6,7 @@
  */
 package com.facebook.react.uimanager;
 
+import android.app.Activity;
 import android.os.SystemClock;
 import android.view.View;
 import android.view.View.MeasureSpec;

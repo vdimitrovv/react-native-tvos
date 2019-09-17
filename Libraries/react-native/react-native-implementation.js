@@ -133,7 +133,7 @@ module.exports = {
     return require('StatusBar');
   },
   get TabBarIOS() {
-    return require('TabBarIOS');
+    return require('../Components/TabBarIOS/TabBarIOS');
   },
   get Text() {
     return require('Text');

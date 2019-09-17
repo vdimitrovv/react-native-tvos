@@ -6,6 +6,7 @@
  */
 package com.facebook.react.uimanager;
 
+import android.app.Activity;
 import android.os.SystemClock;
 import android.view.View;
 import android.view.View.MeasureSpec;
@@ -438,6 +439,28 @@ public class UIImplementation {
 
       for (int i = 0; i < tagsToDelete.length; i++) {
         removeShadowNode(mShadowNodeRegistry.getNode(tagsToDelete[i]));
+      }
+
+      if (addAtIndices.size() > 0) {
+        Activity activity = mReactContext.getCurrentActivity();
+        if (activity != null) {
+          final View view = activity.findViewById(viewTag);
+          // The addAtIndices variable represents where this view should be added. 1 represents a new
+          // screen/view and 0 represents adding to the current view.
+          // The view variable is not null when there is a new view being added, e.g. when navigating
+
+          // TODO: find a better solution for the long term
+          if (view != null && addAtIndices.getInt(0) == 1) {
+            final Runnable maybeRequestFocus =
+                    new Runnable() {
+                      @Override
+                      public void run() {
+                        view.getParent().requestChildFocus(view, view.getRootView());
+                      }
+                    };
+            activity.runOnUiThread(maybeRequestFocus);
+          }
+        }
       }
     }
   }

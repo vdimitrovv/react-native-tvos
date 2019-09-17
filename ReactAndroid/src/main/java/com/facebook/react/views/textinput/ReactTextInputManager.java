@@ -9,6 +9,7 @@ package com.facebook.react.views.textinput;
 
 import static android.view.View.FOCUS_FORWARD;
 
+import android.annotation.SuppressLint;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -888,8 +889,38 @@ public class ReactTextInputManager extends BaseViewManager<ReactEditText, Layout
                       editText.getId(),
                       editText.getText().toString()));
 
-              if (blurOnSubmit) {
-                editText.clearFocus();
+
+              switch (actionId) {
+                case EditorInfo.IME_ACTION_PREVIOUS: {
+                  @SuppressLint("WrongConstant") View view = editText.focusSearch(View.FOCUS_BACKWARD);
+                  editText.hideKeyboard();
+                }
+                break;
+                case EditorInfo.IME_ACTION_NEXT:
+                case EditorInfo.IME_ACTION_DONE: {
+                  @SuppressLint("WrongConstant") View view = editText.focusSearch(View.FOCUS_FORWARD);
+                  if (view instanceof ReactEditText && editText.getId() != view.getId()) {
+                    view.requestFocus();
+                    ((ReactEditText) view).showKeyboard();
+                  } else {
+                    if (view != null) {
+                      view.requestFocus();
+                    }
+
+                    // manually triggering onFocusChanged when having only one input field on
+                    // the screen and no other focusable elements
+                    if (editText.getId() == view.getId()) {
+                      editText.onFocusChanged(false, View.FOCUSABLES_ALL, null);
+                    }
+                    editText.hideKeyboard();
+                  }
+                }
+                break;
+                default:
+                  if (blurOnSubmit) {
+                    editText.clearFocus();
+                  }
+                  break;
               }
 
               // Prevent default behavior except when we want it to insert a newline.

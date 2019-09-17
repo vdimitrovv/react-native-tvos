@@ -53,6 +53,10 @@ import com.facebook.react.uimanager.UIManagerModule;
 import com.facebook.react.uimanager.common.UIManagerType;
 import com.facebook.react.uimanager.events.EventDispatcher;
 import com.facebook.systrace.Systrace;
+
+import java.util.Arrays;
+import java.util.List;
+
 import javax.annotation.Nullable;
 
 /**
@@ -235,6 +239,12 @@ public class ReactRootView extends FrameLayout implements RootView, ReactRoot {
 
   @Override
   public boolean dispatchKeyEvent(KeyEvent ev) {
+    final List<Integer> numbers = Arrays.asList(KeyEvent.KEYCODE_DPAD_UP, KeyEvent.KEYCODE_DPAD_DOWN, KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_DPAD_RIGHT, KeyEvent.KEYCODE_DPAD_CENTER);
+
+    if (!UIManagerModule.isNativeDpadEnabled() && numbers.contains(ev.getKeyCode())) {
+      mAndroidHWInputDeviceHelper.handleKeyEvent(ev);
+      return true;
+    }
     if (mReactInstanceManager == null || !mIsAttachedToInstance ||
       mReactInstanceManager.getCurrentReactContext() == null) {
       FLog.w(

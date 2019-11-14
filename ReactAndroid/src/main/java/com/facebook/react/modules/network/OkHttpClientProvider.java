@@ -62,9 +62,10 @@ public class OkHttpClientProvider {
     // No timeouts by default
     OkHttpClient.Builder client =
         new OkHttpClient.Builder()
-            .connectTimeout(0, TimeUnit.MILLISECONDS)
-            .readTimeout(0, TimeUnit.MILLISECONDS)
-            .writeTimeout(0, TimeUnit.MILLISECONDS)
+            .connectTimeout(10000, TimeUnit.MILLISECONDS)
+            .readTimeout(10000, TimeUnit.MILLISECONDS)
+            .writeTimeout(10000, TimeUnit.MILLISECONDS)
+            .retryOnConnectionFailure(false)
             .cookieJar(new ReactCookieJarContainer());
 
     try {

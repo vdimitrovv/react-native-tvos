@@ -15,19 +15,25 @@ import com.facebook.react.modules.i18nmanager.I18nUtil;
 public class ReactHorizontalScrollContainerView extends ViewGroup {
 
   private int mLayoutDirection;
-  private int mCurrentWidth;
+//  private int mCurrentWidth;
+  private int mLastWidth = 0;
+  private Listener rtlListener = null;
+
+  public interface Listener {
+    void onLayout();
+  }
 
   public ReactHorizontalScrollContainerView(Context context) {
     super(context);
     mLayoutDirection =
         I18nUtil.getInstance().isRTL(context) ? ViewCompat.LAYOUT_DIRECTION_RTL : ViewCompat.LAYOUT_DIRECTION_LTR;
-    mCurrentWidth = 0;
+//    mCurrentWidth = 0;
   }
 
   @Override
   protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
     // This is to fix the overflowing (scaled) item being cropped
-    HorizontalScrollView parent = (HorizontalScrollView) getParent();
+    final HorizontalScrollView parent = (HorizontalScrollView) getParent();
     parent.setClipChildren(false);
     this.setClipChildren(false);
 
@@ -41,11 +47,31 @@ public class ReactHorizontalScrollContainerView extends ViewGroup {
       setRight(newRight);
 
       // Call with the present values in order to re-layout if necessary
-      HorizontalScrollView parentScrollView = (HorizontalScrollView) getParent();
+//      HorizontalScrollView parentScrollView = (HorizontalScrollView) getParent();
       // Fix the ScrollX position when using RTL language
-      int offsetX = parentScrollView.getScrollX() + getWidth() - mCurrentWidth;
-      parentScrollView.scrollTo(offsetX, parentScrollView.getScrollY());
+//      int offsetX = parentScrollView.getScrollX() + getWidth() - mCurrentWidth;
+//      parentScrollView.scrollTo(offsetX, parentScrollView.getScrollY());
+
+      // Fix the ScrollX position when using RTL language accounting for the case when new
+      // data is appended to the "end" (left) of the view (e.g. after fetching additional items)
+      final int offsetX = this.getMeasuredWidth() - mLastWidth + parent.getScrollX();
+
+      // Call with the present values in order to re-layout if necessary
+      parent.scrollTo(offsetX, parent.getScrollY());
+      mLastWidth = this.getMeasuredWidth();
+
+      // Use the listener to adjust the scrollposition if new data was appended
+      if (rtlListener != null) {
+        rtlListener.onLayout();
+      }
     }
-    mCurrentWidth = getWidth();
+//    mCurrentWidth = getWidth();
+  }
+  public int getLastWidth() {
+    return mLastWidth;
+  }
+
+  public void setListener(Listener rtlListener) {
+    this.rtlListener = rtlListener;
   }
 }

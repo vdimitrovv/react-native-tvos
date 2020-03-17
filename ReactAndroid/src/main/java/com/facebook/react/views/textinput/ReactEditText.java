@@ -253,28 +253,20 @@ public class ReactEditText extends EditText {
       return true;
     }
 
-//    if (!mShouldAllowFocus && !isTVDevice()) {
-//      return false;
-//    }
-//
-//    if (!isTVDevice()) {
-//      showSoftKeyboard();
-//    } else {
-//      if (isKeyboardOpened) {
-//        showSoftKeyboard();
-//      } else {
-//        hideSoftKeyboard();
-//      }
-//    }
-
-    if (!mShouldAllowFocus) {
+    if (!mShouldAllowFocus && !isTVDevice()) {
       return false;
     }
 
     setFocusableInTouchMode(true);
     boolean focused = super.requestFocus(direction, previouslyFocusedRect);
-    if (getShowSoftInputOnFocus()) {
+    if (!isTVDevice()) {
       showSoftKeyboard();
+    } else {
+      if (isKeyboardOpened) {
+        showSoftKeyboard();
+      } else {
+        hideSoftKeyboard();
+      }
     }
     return focused;
   }

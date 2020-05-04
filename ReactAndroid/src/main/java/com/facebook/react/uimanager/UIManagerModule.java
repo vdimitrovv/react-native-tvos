@@ -111,6 +111,7 @@ public class UIManagerModule extends ReactContextBaseJavaModule
 
   private static final boolean DEBUG =
       PrinterHolder.getPrinter().shouldDisplayLogMessage(ReactDebugOverlayTags.UI_MANAGER);
+  private static boolean sIsNativeDpadEnabled = true;
 
   private final EventDispatcher mEventDispatcher;
   private final Map<String, Object> mModuleConstants;
@@ -168,6 +169,15 @@ public class UIManagerModule extends ReactContextBaseJavaModule
             minTimeLeftInFrameForNonBatchedOperationMs);
 
     reactContext.addLifecycleEventListener(this);
+  }
+
+  public static boolean isNativeDpadEnabled() {
+    return sIsNativeDpadEnabled;
+  }
+
+  @ReactMethod
+  public void enableNativeDpad(boolean enable) {
+    sIsNativeDpadEnabled = enable;
   }
 
   @Deprecated

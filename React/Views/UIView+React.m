@@ -242,9 +242,16 @@
 }
 
 - (void)reactFocus {
+  NSString * someString = @"Something To focus Print";
+  NSLog(@"%@", someString);   
   if (![self becomeFirstResponder]) {
     self.reactIsFocusNeeded = YES;
   }
+}
+
+- (void)reactTestMethod {
+  NSString * someString = @"Something To testMethod Print";
+  NSLog(@"%@", someString);   
 }
 
 - (void)reactFocusIfNeeded {
@@ -256,6 +263,8 @@
 }
 
 - (void)reactBlur {
+  NSString * someString = @"Something To blur Print";
+  NSLog(@"%@", someString);  
   [self resignFirstResponder];
 }
 

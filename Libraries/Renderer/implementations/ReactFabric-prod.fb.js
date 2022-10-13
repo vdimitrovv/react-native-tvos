@@ -1602,6 +1602,9 @@ var ReactFabricHostComponent = (function() {
   ReactFabricHostComponent.prototype.blur = function() {
     ReactNativePrivateInterface.TextInputState.blurTextInput(this._nativeTag);
   };
+  ReactFabricHostComponent.prototype.testMethod = function() {
+    ReactNativePrivateInterface.TextInputState.testMethodTextInput(this._nativeTag);
+  };
   ReactFabricHostComponent.prototype.focus = function() {
     ReactNativePrivateInterface.TextInputState.focusTextInput(this._nativeTag);
   };
@@ -7513,6 +7516,11 @@ var roots = new Map(),
         _inherits$1(ReactNativeComponent, _React$Component);
         ReactNativeComponent.prototype.blur = function() {
           ReactNativePrivateInterface.TextInputState.blurTextInput(
+            findNodeHandle(this)
+          );
+        };
+        ReactNativeComponent.prototype.testMethod = function() {
+          ReactNativePrivateInterface.TextInputState.testMethodTextInput(
             findNodeHandle(this)
           );
         };

@@ -3891,6 +3891,10 @@ var ReactNativeFiberHostComponent = (function() {
     ReactNativePrivateInterface.TextInputState.blurTextInput(this._nativeTag);
   };
 
+  ReactNativeFiberHostComponent.prototype.testMethod = function testMethod() {
+    ReactNativePrivateInterface.TextInputState.testMethodTextInput(this._nativeTag);
+  };
+
   ReactNativeFiberHostComponent.prototype.focus = function focus() {
     ReactNativePrivateInterface.TextInputState.focusTextInput(this._nativeTag);
   };
@@ -22415,6 +22419,12 @@ var NativeMethodsMixin = function(findNodeHandle, findHostInstance) {
       );
     },
 
+    testMethod: function() {
+      ReactNativePrivateInterface.TextInputState.testMethodTextInput(
+        findNodeHandle(this)
+      );
+    },
+
     /**
      * Removes focus from an input or view. This is the opposite of `focus()`.
      */
@@ -22542,6 +22552,12 @@ var ReactNativeComponent = function(findNodeHandle, findHostInstance) {
      */
     ReactNativeComponent.prototype.blur = function blur() {
       ReactNativePrivateInterface.TextInputState.blurTextInput(
+        findNodeHandle(this)
+      );
+    };
+
+    ReactNativeComponent.prototype.testMethod = function testMethod() {
+      ReactNativePrivateInterface.TextInputState.testMethodTextInput(
         findNodeHandle(this)
       );
     };

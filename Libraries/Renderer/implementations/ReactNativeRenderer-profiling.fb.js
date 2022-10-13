@@ -1569,6 +1569,9 @@ var ReactNativeFiberHostComponent = (function() {
   ReactNativeFiberHostComponent.prototype.blur = function() {
     ReactNativePrivateInterface.TextInputState.blurTextInput(this._nativeTag);
   };
+  ReactNativeFiberHostComponent.prototype.testMethod = function() {
+    ReactNativePrivateInterface.TextInputState.testMethodTextInput(this._nativeTag);
+  };
   ReactNativeFiberHostComponent.prototype.focus = function() {
     ReactNativePrivateInterface.TextInputState.focusTextInput(this._nativeTag);
   };

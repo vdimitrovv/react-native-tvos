@@ -314,6 +314,8 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithFrame:(CGRect)frame)
 
 - (void)textInputDidBeginEditing
 {
+  NSString * someString = @"textInputDidBeginEditing";
+  NSLog(@"%@", someString);  
   if (_clearTextOnFocus) {
     self.backedTextInputView.attributedText = [NSAttributedString new];
   }
@@ -336,17 +338,19 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithFrame:(CGRect)frame)
 
 - (void)textInputDidEndEditing
 {
-  [_eventDispatcher sendTextEventWithType:RCTTextEventTypeEnd
-                                 reactTag:self.reactTag
-                                     text:self.backedTextInputView.attributedText.string
-                                      key:nil
-                               eventCount:_nativeEventCount];
+  NSString * someString = @"textInputDidEndEditing";
+  NSLog(@"%@", someString);  
+  // [_eventDispatcher sendTextEventWithType:RCTTextEventTypeEnd
+  //                                reactTag:self.reactTag
+  //                                    text:self.backedTextInputView.attributedText.string
+  //                                     key:nil
+  //                              eventCount:_nativeEventCount];
 
-  [_eventDispatcher sendTextEventWithType:RCTTextEventTypeBlur
-                                 reactTag:self.reactTag
-                                     text:self.backedTextInputView.attributedText.string
-                                      key:nil
-                               eventCount:_nativeEventCount];
+  // [_eventDispatcher sendTextEventWithType:RCTTextEventTypeBlur
+  //                                reactTag:self.reactTag
+  //                                    text:self.backedTextInputView.attributedText.string
+  //                                     key:nil
+  //                              eventCount:_nativeEventCount];
 }
 
 - (BOOL)textInputShouldReturn
@@ -356,11 +360,13 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithFrame:(CGRect)frame)
   // `onSubmitEditing` is called when "Submit" button
   // (the blue key on onscreen keyboard) did pressed
   // (no connection to any specific "submitting" process).
-  [_eventDispatcher sendTextEventWithType:RCTTextEventTypeSubmit
-                                 reactTag:self.reactTag
-                                     text:self.backedTextInputView.attributedText.string
-                                      key:nil
-                               eventCount:_nativeEventCount];
+  NSString * someString = @"textInputShouldReturn";
+  NSLog(@"%@", someString);   
+  // [_eventDispatcher sendTextEventWithType:RCTTextEventTypeSubmit
+  //                                reactTag:self.reactTag
+  //                                    text:self.backedTextInputView.attributedText.string
+  //                                     key:nil
+  //                              eventCount:_nativeEventCount];
 
   return _blurOnSubmit;
 }
@@ -372,6 +378,8 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithFrame:(CGRect)frame)
 
 - (BOOL)textInputShouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
 {
+  NSString * someString = @"textInputShouldChangeTextInRange";
+  NSLog(@"%@", someString);  
   id<RCTBackedTextInputViewProtocol> backedTextInputView = self.backedTextInputView;
 
   if (!backedTextInputView.textWasPasted) {
@@ -441,6 +449,9 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithFrame:(CGRect)frame)
   [self updateLocalData];
 
   id<RCTBackedTextInputViewProtocol> backedTextInputView = self.backedTextInputView;
+
+  NSString * someString = @"textInputShouldChangeTextInRange";
+  NSLog(@"%@", someString); 
 
   // Detect when `backedTextInputView` updates happened that didn't invoke `shouldChangeTextInRange`
   // (e.g. typing simplified Chinese in pinyin will insert and remove spaces without
@@ -532,6 +543,11 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithFrame:(CGRect)frame)
 - (void)reactFocus
 {
   [self.backedTextInputView reactFocus];
+}
+
+- (void)reactTestMethod
+{
+  [self.backedTextInputView reactTestMethod];
 }
 
 - (void)reactBlur

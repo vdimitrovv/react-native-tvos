@@ -1603,6 +1603,9 @@ var ReactFabricHostComponent = (function() {
   ReactFabricHostComponent.prototype.blur = function() {
     ReactNativePrivateInterface.TextInputState.blurTextInput(this._nativeTag);
   };
+  ReactFabricHostComponent.prototype.testMethod = function() {
+    ReactNativePrivateInterface.TextInputState.testMethodTextInput(this._nativeTag);
+  };
   ReactFabricHostComponent.prototype.focus = function() {
     ReactNativePrivateInterface.TextInputState.focusTextInput(this._nativeTag);
   };

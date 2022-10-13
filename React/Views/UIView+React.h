@@ -93,6 +93,7 @@
  * Focus manipulation.
  */
 - (void)reactFocus;
+- (void)reactTestMethod;
 - (void)reactFocusIfNeeded;
 - (void)reactBlur;
 

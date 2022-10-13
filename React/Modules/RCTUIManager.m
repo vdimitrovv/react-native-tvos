@@ -1032,6 +1032,26 @@ RCT_EXPORT_METHOD(focus:(nonnull NSNumber *)reactTag)
   }];
 }
 
+RCT_EXPORT_METHOD(testMethod:(nonnull NSNumber *)reactTag)
+{
+  [self addUIBlock:^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
+    UIView *newResponder = viewRegistry[reactTag];
+    [newResponder reactTestMethod];
+    // NSInteger nextTag = nextResponder.tag + 1;
+  // Try to find next responder
+  // UIResponder* nextResponder = [newResponder.superview viewWithTag:nextTag];
+  // if (nextResponder) {
+    // Found next responder, so set it.
+    // [nextResponder becomeFirstResponder];
+  // } else {
+    // Not found, so remove keyboard.
+    // [textField resignFirstResponder];
+  // }
+
+    
+  }];
+}
+
 RCT_EXPORT_METHOD(blur:(nonnull NSNumber *)reactTag)
 {
   [self addUIBlock:^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry){

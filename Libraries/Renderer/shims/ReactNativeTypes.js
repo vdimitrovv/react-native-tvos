@@ -85,6 +85,7 @@ export type ViewConfigGetter = () => ReactNativeBaseComponentViewConfig<>;
  */
 class ReactNativeComponent<Props> extends React.Component<Props> {
   blur(): void {}
+  testMethod(): void {}
   focus(): void {}
   measure(callback: MeasureOnSuccessCallback): void {}
   measureInWindow(callback: MeasureInWindowOnSuccessCallback): void {}
@@ -102,6 +103,7 @@ class ReactNativeComponent<Props> extends React.Component<Props> {
  */
 export type NativeMethodsMixinType = {
   blur(): void,
+  testMethod(): void,
   focus(): void,
   measure(callback: MeasureOnSuccessCallback): void,
   measureInWindow(callback: MeasureInWindowOnSuccessCallback): void,

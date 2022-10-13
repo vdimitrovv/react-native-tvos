@@ -3806,6 +3806,8 @@ var ReactNativeComponent = (function(_React$Component) {
 
   ReactNativeComponent.prototype.blur = function blur() {};
 
+  ReactNativeComponent.prototype.testMethod = function testMethod() {};
+
   ReactNativeComponent.prototype.focus = function focus() {};
 
   ReactNativeComponent.prototype.measure = function measure(callback) {};
@@ -4602,6 +4604,10 @@ var ReactFabricHostComponent = (function() {
 
   ReactFabricHostComponent.prototype.blur = function blur() {
     ReactNativePrivateInterface.TextInputState.blurTextInput(this._nativeTag);
+  };
+
+  ReactFabricHostComponent.prototype.testMethod = function testMethod() {
+    ReactNativePrivateInterface.TextInputState.testMethodTextInput(this._nativeTag);
   };
 
   ReactFabricHostComponent.prototype.focus = function focus() {
@@ -22843,6 +22849,12 @@ var NativeMethodsMixin = function(findNodeHandle, findHostInstance) {
       );
     },
 
+    testMethod: function() {
+      ReactNativePrivateInterface.TextInputState.testMethodTextInput(
+        findNodeHandle(this)
+      );
+    },
+
     /**
      * Removes focus from an input or view. This is the opposite of `focus()`.
      */
@@ -22970,6 +22982,12 @@ var ReactNativeComponent$1 = function(findNodeHandle, findHostInstance) {
      */
     ReactNativeComponent.prototype.blur = function blur() {
       ReactNativePrivateInterface.TextInputState.blurTextInput(
+        findNodeHandle(this)
+      );
+    };
+
+    ReactNativeComponent.prototype.testMethod = function testMethod() {
+      ReactNativePrivateInterface.TextInputState.testMethodTextInput(
         findNodeHandle(this)
       );
     };

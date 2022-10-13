@@ -28,6 +28,7 @@ export interface Spec extends TurboModule {
   +updateView: (reactTag: number, viewName: string, props: Object) => void;
   +focus: (reactTag: ?number) => void;
   +blur: (reactTag: ?number) => void;
+  +testMethod: (reactTag: ?number) => void;
   +findSubviewIn: (
     reactTag: ?number,
     point: Array<number>,

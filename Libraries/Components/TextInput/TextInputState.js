@@ -51,6 +51,28 @@ function focusTextInput(textFieldID: ?number) {
 }
 
 /**
+ * @param {number} TextInputID id of the text field to focus
+ * Focuses the specified text field
+ * noop if the text field was already focused
+ */
+function testMethodTextInput(textFieldID: ?number) {
+  if (currentlyFocusedID !== textFieldID && textFieldID !== null) {
+    let previousFocusedID = currentlyFocusedID;
+    currentlyFocusedID = textFieldID;
+    if (Platform.OS === 'ios') {
+      UIManager.testMethod(textFieldID);
+    } else if (Platform.OS === 'android') {
+      UIManager.dispatchViewManagerCommand(
+        textFieldID,
+        UIManager.getViewManagerConfig('AndroidTextInput').Commands
+          .blurTextInput,
+        null,
+      );
+    }
+  }
+}
+
+/**
  * @param {number} textFieldID id of the text field to unfocus
  * Unfocuses the specified text field
  * noop if it wasn't focused
@@ -87,6 +109,7 @@ module.exports = {
   currentlyFocusedField,
   focusTextInput,
   blurTextInput,
+  testMethodTextInput,
   registerInput,
   unregisterInput,
   isTextInput,

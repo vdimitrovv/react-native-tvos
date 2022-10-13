@@ -59,6 +59,7 @@ module.exports = [
   'getViewManagerConfig',
   'blur',
   'focus',
+  'testMethod',
   'genericBubblingEventTypes',
   'genericDirectEventTypes',
   'lazilyLoadView',

@@ -942,7 +942,7 @@ public class ReactTextInputManager extends BaseViewManager<ReactEditText, Layout
 
                     // manually triggering onFocusChanged when having only one input field on
                     // the screen and no other focusable elements
-                    if (editText.getId() == view.getId()) {
+                    if (editText != null && view != null && editText.getId() == view.getId()) {
                       editText.onFocusChanged(false, View.FOCUSABLES_ALL, null);
                     }
                     editText.hideKeyboard();

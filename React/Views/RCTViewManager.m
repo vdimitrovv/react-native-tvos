@@ -136,6 +136,10 @@ RCT_EXPORT_VIEW_PROPERTY(nextFocusUp, NSNumber)
 RCT_EXPORT_VIEW_PROPERTY(nextFocusDown, NSNumber)
 RCT_EXPORT_VIEW_PROPERTY(nextFocusLeft, NSNumber)
 RCT_EXPORT_VIEW_PROPERTY(nextFocusRight, NSNumber)
+RCT_EXPORT_VIEW_PROPERTY(trapFocusUp, BOOL)
+RCT_EXPORT_VIEW_PROPERTY(trapFocusDown, BOOL)
+RCT_EXPORT_VIEW_PROPERTY(trapFocusLeft, BOOL)
+RCT_EXPORT_VIEW_PROPERTY(trapFocusRight, BOOL)
 #endif
 
 // Accessibility related properties

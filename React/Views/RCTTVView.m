@@ -18,11 +18,13 @@
 #import "RCTView.h"
 #import "UIView+React.h"
 #import <React/RCTUIManager.h>
+#import "RCTTVViewDebounceManager.h"
 
 @implementation RCTTVView {
   __weak RCTBridge *_bridge;
   UITapGestureRecognizer *_selectRecognizer;
   BOOL motionEffectsAdded;
+  BOOL _focusEventSent;
 }
 
 - (instancetype)initWithBridge:(RCTBridge *)bridge {
@@ -261,21 +263,38 @@ RCT_NOT_IMPLEMENTED(-(instancetype)initWithCoder : unused)
   if (context.previouslyFocusedView == context.nextFocusedView) {
     return;
   }
-  if (context.nextFocusedView == self && self.isTVSelectable ) {
-    [self becomeFirstResponder];
-    [self enableDirectionalFocusGuides];
-    [coordinator addCoordinatedAnimations:^(void){
-      [self addParallaxMotionEffects];
+  if (self.isTVSelectable) {
+    if (context.nextFocusedView == self ) {
+      [self becomeFirstResponder];
       [self sendFocusNotification:context];
-    } completion:^(void){}];
-  } else {
-    [self disableDirectionalFocusGuides];
-    [coordinator addCoordinatedAnimations:^(void){
+      [coordinator addCoordinatedAnimations:^(void){
+        [self addParallaxMotionEffects];
+      } completion:^(void){}];
+    } else {
       [self sendBlurNotification:context];
-      [self removeParallaxMotionEffects];
-    } completion:^(void){}];
-    [self resignFirstResponder];
+      [coordinator addCoordinatedAnimations:^(void){
+        [self removeParallaxMotionEffects];
+      } completion:^(void){}];
+      [self resignFirstResponder];
+    }
   }
+}
+
+- (BOOL)shouldUpdateFocusInContext:(UIFocusUpdateContext *)context
+{
+  // This is  the `trapFocus*` logic that prevents the focus updates if
+  // focus should be trapped and `nextFocusedItem` is not a child FocusEnv.
+  if ((_trapFocusUp && context.focusHeading == UIFocusHeadingUp)
+     || (_trapFocusDown && context.focusHeading == UIFocusHeadingDown)
+     || (_trapFocusLeft && context.focusHeading == UIFocusHeadingLeft)
+     || (_trapFocusRight && context.focusHeading == UIFocusHeadingRight)) {
+
+    // Checks if `nextFocusedItem` is a child `FocusEnvironment`.
+    // If not, it returns false thus it keeps the focus inside.
+    return [UIFocusSystem environment:self containsEnvironment:context.nextFocusedItem];
+  }
+
+  return [super shouldUpdateFocusInContext:context];
 }
 
 // In tvOS, to support directional focus APIs, we add a UIFocusGuide for each
@@ -369,12 +388,24 @@ RCT_NOT_IMPLEMENTED(-(instancetype)initWithCoder : unused)
 
 - (void)sendFocusNotification:(__unused UIFocusUpdateContext *)context
 {
-    [self sendNotificationWithEventType:@"focus"];
+  [[RCTTVViewDebounceManager sharedManager] sendDebouncedEventWithTarget:self
+                                                                selector:@selector(sendFocusEvent)];
+
+}
+
+- (void)sendFocusEvent
+{
+  [self sendNotificationWithEventType:@"focus"];
+  self.focusEventSent = YES;
 }
 
 - (void)sendBlurNotification:(__unused UIFocusUpdateContext *)context
 {
+    if (!_focusEventSent) {
+        return;
+    }
     [self sendNotificationWithEventType:@"blur"];
+    _focusEventSent = NO;
 }
 
 - (void)sendSelectNotification:(UIGestureRecognizer *)recognizer

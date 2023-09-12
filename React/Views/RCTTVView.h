@@ -42,6 +42,13 @@
 @property (nonatomic, strong) UIFocusGuide * focusGuideLeft;
 @property (nonatomic, strong) UIFocusGuide * focusGuideRight;
 
+@property (nonatomic, assign) BOOL trapFocusUp;
+@property (nonatomic, assign) BOOL trapFocusDown;
+@property (nonatomic, assign) BOOL trapFocusLeft;
+@property (nonatomic, assign) BOOL trapFocusRight;
+
+@property (nonatomic, assign) BOOL focusEventSent;
+
 - (instancetype)initWithBridge:(RCTBridge *)bridge;
 
 /**
